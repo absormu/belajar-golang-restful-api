@@ -1,0 +1,31 @@
+
+
+### GET all categories
+GET http://localhost:3000/api/categories
+X-API-Key: RAHASIA
+Accept: application/json
+
+### Create new category
+POST http://localhost:3000/api/categories
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name" : "Sport"
+}
+
+### GET by Id
+GET http://localhost:3000/api/categories/21
+Accept: application/json
+
+### Update by Id
+PUT  http://localhost:3000/api/categories/1
+Accept: application/json
+
+{
+    "name" : "Gadget 2"
+}
+
+### Delete by Id
+DELETE   http://localhost:3000/api/categories/1
+Accept: application/json

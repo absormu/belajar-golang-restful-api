@@ -3,18 +3,33 @@ package service
 import (
 	"context"
 	"database/sql"
+	"programmerzamannow/belajar-golang-restful-api/exception"
 	"programmerzamannow/belajar-golang-restful-api/helper"
 	"programmerzamannow/belajar-golang-restful-api/model/domain"
 	"programmerzamannow/belajar-golang-restful-api/model/web"
 	"programmerzamannow/belajar-golang-restful-api/repository"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type CategoryServiceimpl struct {
 	CategoryRespository repository.CategoryRepository
 	DB                  *sql.DB
+	Validate            *validator.Validate
+}
+
+func NewCategoryService(categoryRepository repository.CategoryRepository, DB *sql.DB, validate *validator.Validate) CategoryService {
+	return &CategoryServiceimpl{
+		CategoryRespository: categoryRepository,
+		DB:                  DB,
+		Validate:            validate,
+	}
 }
 
 func (service *CategoryServiceimpl) Create(ctx context.Context, request web.CategoryCreateRequest) web.CategoryResponse {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
@@ -29,12 +44,17 @@ func (service *CategoryServiceimpl) Create(ctx context.Context, request web.Cate
 }
 
 func (service *CategoryServiceimpl) Update(ctx context.Context, request web.CategoryUpdateRequest) web.CategoryResponse {
+	err := service.Validate.Struct(request)
+	helper.PanicIfError(err)
+
 	tx, err := service.DB.Begin()
 	helper.PanicIfError(err)
 	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRespository.FindById(ctx, tx, request.Id)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	category.Name = request.Name
 
@@ -49,7 +69,9 @@ func (service *CategoryServiceimpl) Delete(ctx context.Context, categoryId int) 
 	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRespository.FindById(ctx, tx, categoryId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	service.CategoryRespository.Delete(ctx, tx, category)
 }
@@ -60,7 +82,9 @@ func (service *CategoryServiceimpl) FindById(ctx context.Context, categoryId int
 	defer helper.CommitOrRollback(tx)
 
 	category, err := service.CategoryRespository.FindById(ctx, tx, categoryId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	return helper.ToCategoryResponse(category)
 
