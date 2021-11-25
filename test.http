@@ -7,6 +7,7 @@ Accept: application/json
 
 ### Create new category
 POST http://localhost:3000/api/categories
+X-API-Key: RAHASIA
 Accept: application/json
 Content-Type: application/json
 
@@ -15,17 +16,20 @@ Content-Type: application/json
 }
 
 ### GET by Id
-GET http://localhost:3000/api/categories/21
+GET http://localhost:3000/api/categories/2
+X-API-Key: RAHASIA
 Accept: application/json
 
 ### Update by Id
-PUT  http://localhost:3000/api/categories/1
+PUT  http://localhost:3000/api/categories/4
+X-API-Key: RAHASIA
 Accept: application/json
 
 {
-    "name" : "Gadget 2"
+    "name" : "Sport One"
 }
 
 ### Delete by Id
-DELETE   http://localhost:3000/api/categories/1
+DELETE   http://localhost:3000/api/categories/6
+X-API-Key: RAHASIA
 Accept: application/json

@@ -45,3 +45,18 @@
 
 
 ```
+* db test
+```
+    create database dbrestapi_test;
+    use dbrestapi_test;
+
+    CREATE table category 
+    (
+	id integer primary key auto_increment,
+	name varchar(200) not null
+    ) engine = InnoDB;
+
+    SELECT * FROM category ;
+
+
+```
